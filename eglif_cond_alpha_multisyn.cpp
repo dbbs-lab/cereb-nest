@@ -315,7 +315,7 @@ eglif_cond_alpha_multisyn::eglif_cond_alpha_multisyn()
 
   P_.A2 = ((-0.6));
  
-  P_.adaptC = 0.0;
+  P_.kadap = 0.0;
 
   P_.stc2_0 = 0.0;
 
@@ -454,7 +454,7 @@ eglif_cond_alpha_multisyn_dynamics(double, const double y[], double f[],
 
   // Model currents
   f[State_::I_dep] = ((-node.get_k1())) * y[State_::I_dep];
-  f[State_::I_adap] = ((-node.get_k2())) * y[State_::I_adap] + node.get_adaptC()*(y[State_::V_m] - node.get_E_L());
+  f[State_::I_adap] = ((-node.get_k2())) * y[State_::I_adap] + node.get_kadap()*(y[State_::V_m] - node.get_E_L());
 
  
   f[State_::V_m] =
