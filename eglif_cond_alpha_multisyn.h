@@ -333,9 +333,9 @@ public:
 
   inline void set_A2(const double v) { P_.A2 = v; }
 
-  inline double get_adaptC() const { return P_.adaptC; }
+  inline double get_kadap() const { return P_.kadap; }
 
-  inline void set_adaptC(const double v) { P_.adaptC = v; }
+  inline void set_kadap(const double v) { P_.kadap = v; }
 
   inline double get_stc2_0() const { return P_.stc2_0; }
 
@@ -609,7 +609,7 @@ protected:
 
     double A2; //
 
-    double adaptC;
+    double kadap;
 
     double stc2_0;
 
@@ -760,8 +760,8 @@ protected:
     inline double get_A2() const { return A2; }
     inline void set_A2(const double A2) { this->A2 = A2; }
 
-    inline double get_adaptC() const { return adaptC; }
-    inline void set_adaptC(const double adaptC) { this->adaptC = adaptC; }
+    inline double get_kadap() const { return kadap; }
+    inline void set_kadap(const double kadap) { this->kadap = kadap; }
 
     inline double get_stc2_0() const { return stc2_0; }
     inline void set_stc2_0(const double stc2_0) { this->stc2_0 = stc2_0; }
@@ -1228,7 +1228,7 @@ eglif_cond_alpha_multisyn::get_status(DictionaryDatum &__d) const {
 
   def<double>(__d, "A2", get_A2());
 
-  def<double>(__d, "adaptC", get_adaptC());
+  def<double>(__d, "kadap", get_kadap());
 
   def<double>(__d, "stc2_0", get_stc2_0());
 
@@ -1440,9 +1440,9 @@ eglif_cond_alpha_multisyn::set_status(const DictionaryDatum &__d) {
     set_A2(tmp_A2);
   }
 
-  double tmp_adaptC;
-  if (updateValue<double>(__d, "adaptC", tmp_adaptC)) {
-    set_adaptC(tmp_adaptC);
+  double tmp_kadap;
+  if (updateValue<double>(__d, "kadap", tmp_kadap)) {
+    set_kadap(tmp_kadap);
   }
 
   double tmp_stc2_0;
