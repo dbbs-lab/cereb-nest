@@ -20,7 +20,7 @@ git clone https://github.com/dbbs-lab/cereb-nest/
 ```
 3. Move to cereb-nest directory and create a new folder where you will build the extension module
 ```
-cd $HOME/workspace/cereb-nest
+cd $HOME/cereb-nest
 mkdir b
 cd b
 ```
@@ -67,14 +67,8 @@ make install
 
 7. Every time you need the module, you can install it in this way:
 ```
-python
-
-```
-
-```
 import nest
 nest.Install("cerebmodule")
-
 ```
 
 8. You can now use all the nodes and synapses contained in this NEST Module.
