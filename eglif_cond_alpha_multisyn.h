@@ -359,9 +359,9 @@ public:
 
   inline void set_bufferT(const std::vector<double> v) { V_.bufferT = v; }
 
-  inline double get_V_th() const { return V_.V_th; }
+  inline double get_Vth() const { return V_.V_th; }
 
-  inline void set_V_th(const double v) { V_.V_th = v; }
+  inline void set_Vth(const double v) { V_.V_th = v; }
 
   inline double get_I_gen() const { return V_.I_gen; }
 
@@ -850,8 +850,8 @@ protected:
       this->bufferT = bufferT;
     }
 
-    inline double get_V_th() const { return V_th; }
-    inline void set_V_th(const double V_th) { this->V_th = V_th; }
+    inline double get_Vth() const { return V_th; }
+    inline void set_Vth(const double V_th) { this->V_th = V_th; }
 
     inline double get_I_gen() const { return I_gen; }
     inline void set_I_gen(const double I_gen) { this->I_gen = I_gen; }
