@@ -1,4 +1,7 @@
 PREVIOUS_DIR=$PWD
+cd /home/travis
+git clone https://github.com/dbbs-lab/cereb-nest/
+cd cereb-nest
 mkdir build
 cd build
 CEREBNEST_BUILD_DIR=$PWD
