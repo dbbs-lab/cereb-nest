@@ -44,6 +44,8 @@
 #include "kernel_manager.h"
 #include "model.h"
 #include "model_manager_impl.h"
+#include "nest.h"
+#include "nest_impl.h"
 #include "nestmodule.h"
 #include "target_identifier.h"
 
