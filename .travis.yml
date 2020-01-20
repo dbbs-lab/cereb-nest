@@ -6,7 +6,8 @@ cache:
 install:
   - export NEST_INSTALL_DIR=/home/travis/nest-$NEST_VERSION-
   - source devops/check_nest_cache.sh
-  - sudo apt-get install -y python3-dev python3-rtree build-essential cmake cython libgsl-dev libltdl-dev libncurses-dev libreadline-dev openmpi-bin libopenmpi-dev
+  - sudo apt-get install -y python3.6-dev libpython3.6-dev python3-rtree build-essential cmake cython libgsl-dev libltdl-dev libncurses-dev libreadline-dev openmpi-bin libopenmpi-dev
+  - locate Python.h
   - if [ "$HAS_NEST_CACHE" = "0" ]; then
       source devops/install_nest.sh
     else
