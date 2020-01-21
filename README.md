@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/dbbs-lab/cereb-nest.svg?branch=master)](https://travis-ci.com/dbbs-lab/cereb-nest)
+
 # cereb-nest
 
 Tested with:
