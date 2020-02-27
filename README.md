@@ -13,7 +13,7 @@ Tested with:
 
 1. Export an Environment Variable containing the installation directory of NEST. E.g.:
 ```
-export NEST_INSTALL_DIR=$HOME/nest-simulator-install/
+export NEST_INSTALL_DIR=$HOME/nest-simulator-install
 ```
 2. Clone this GitHub Repository in a directory outside NEST source and build directories. E.g.:
 ```
