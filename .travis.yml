@@ -1,9 +1,12 @@
-language: generic
+language: python
 dist: bionic
 cache:
   pip: true
   directories:
     - $HOME/nest-$NEST_VERSION
+jobs:
+  include:
+    python: 3.6
 install:
   - export NEST_INSTALL_DIR=/home/travis/nest-$NEST_VERSION
   - source devops/check_nest_cache.sh
