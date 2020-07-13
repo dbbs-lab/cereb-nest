@@ -13,7 +13,6 @@ install:
     else
       echo "NEST cache found, skipping installation";
     fi
-  - source devops/install_cereb_nest.sh
-  - source devops/post_install_env_vars.sh
+  - pip3 install .
 script:
   - python3 -c "import nest; nest.Install('cerebmodule')"
