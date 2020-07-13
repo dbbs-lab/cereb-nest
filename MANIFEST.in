@@ -1,0 +1,4 @@
+include cereb_nest/*
+include cereb_nest/sli/*
+include setup.py
+include README.md

@@ -1,9 +1,12 @@
-language: generic
+language: python
 dist: bionic
 cache:
   pip: true
   directories:
     - $HOME/nest-$NEST_VERSION
+jobs:
+  include:
+    python: 3.6
 install:
   - export NEST_INSTALL_DIR=/home/travis/nest-$NEST_VERSION
   - source devops/check_nest_cache.sh
@@ -13,7 +16,6 @@ install:
     else
       echo "NEST cache found, skipping installation";
     fi
-  - source devops/install_cereb_nest.sh
-  - source devops/post_install_env_vars.sh
+  - python3 -m pip install .
 script:
   - python3 -c "import nest; nest.Install('cerebmodule')"
