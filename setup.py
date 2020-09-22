@@ -27,6 +27,8 @@ class cmake_extension(Extension):
 class cmake_build(build_ext):
     def run(self):
         print("RUNNING CMAKE")
+        print("Path?", sys.path)
+        sys.path.insert(0, "/home/travis/nest-2.18.0/lib/python3.6/site-packages")
         if not check_cmake():
             raise RuntimeError('CMake is not available. CMake 3.12 is required.')
 
