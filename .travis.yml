@@ -19,5 +19,5 @@ install:
   - export PYTHONPATH=/home/travis/nest-$NEST_VERSION/lib/python3.6/site-packages:$PYTHONPATH
   - python -m pip install .
 script:
-  - python /home/travis/dbbs-lab/cereb-nest/tests/test_install.py
+  - python /home/travis/build/dbbs-lab/cereb-nest/tests/test_install.py
   - python -c "import nest; nest.Install('cerebmodule')"
