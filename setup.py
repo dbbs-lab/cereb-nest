@@ -24,11 +24,23 @@ class cmake_extension(Extension):
     def __init__(self, name):
         Extension.__init__(self, name, sources=[])
 
+import os
+
+def list_files(startpath):
+    for root, dirs, files in os.walk(startpath):
+        level = root.replace(startpath, '').count(os.sep)
+        indent = ' ' * 4 * (level)
+        print('{}{}/'.format(indent, os.path.basename(root)))
+        subindent = ' ' * 4 * (level + 1)
+        for f in files:
+            print('{}{}'.format(subindent, f))
+
 class cmake_build(build_ext):
     def run(self):
         print("RUNNING CMAKE")
         print("Path?", sys.path)
         sys.path.insert(0, "/home/travis/nest-2.18.0/lib/python3.6/site-packages")
+        list_files("/home/travis/nest-2.18.0/lib/python3.6/site-packages")
         if not check_cmake():
             raise RuntimeError('CMake is not available. CMake 3.12 is required.')
 
