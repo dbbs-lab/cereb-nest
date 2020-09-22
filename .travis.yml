@@ -16,7 +16,7 @@ install:
     else
       echo "NEST cache found, skipping installation";
     fi
-  - export PYTHON_PATH=/home/travis/nest-=NEST_VERSION/lib/python3.6/site-packages:$PYTHON_PATH
+  - export PYTHON_PATH=/home/travis/nest-$NEST_VERSION/lib/python3.6/site-packages:$PYTHON_PATH
   - python -m pip install .
 script:
   - python -c "import nest; nest.Install('cerebmodule')"
