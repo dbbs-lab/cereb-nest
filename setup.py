@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 import os, sys
 
-import site
-raise Exception(site.getsitepackages(), [os.listdir(d) for d in site.getsitepackages()])
-
 import subprocess
 from setuptools import setup, Extension
 from setuptools.dist import Distribution
