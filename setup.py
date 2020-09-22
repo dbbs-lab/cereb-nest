@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 import os, sys
 
-print("Path?", sys.path)
-sys.path.insert(0, "/home/travis/nest-2.18.0/lib/python3.6/site-packages")
-
 import subprocess
 from setuptools import setup, Extension
 from setuptools.dist import Distribution
