@@ -2,7 +2,7 @@
 import os, sys
 
 import site
-raise Exception(site.getusersitepackages(), site.getsitepackages(), [os.listdir(d) for d in site.getsitepackages()], [os.listdir(d) for d in site.getusersitepackages()])
+raise Exception(site.getsitepackages(), [os.listdir(d) for d in site.getsitepackages()])
 
 import subprocess
 from setuptools import setup, Extension
