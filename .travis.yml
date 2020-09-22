@@ -6,7 +6,7 @@ cache:
     - $HOME/nest-$NEST_VERSION
 jobs:
   include:
-    python: 3.6
+    python: 3.6.9
 install:
   - export NEST_INSTALL_DIR=/home/travis/nest-$NEST_VERSION
   - source devops/check_nest_cache.sh
