@@ -16,6 +16,6 @@ install:
     else
       echo "NEST cache found, skipping installation";
     fi
-  - python3 -m pip install .
+  - python -m pip install .
 script:
-  - python3 -c "import nest; nest.Install('cerebmodule')"
+  - python -c "import nest; nest.Install('cerebmodule')"
