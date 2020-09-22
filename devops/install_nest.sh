@@ -7,8 +7,11 @@ git clone --depth 1 https://github.com/dbbs-lab/nest-simulator nest-simulator-$N
 mkdir nest-simulator-$NEST_VERSION-build
 mkdir nest-install-$NEST_VERSION
 cd nest-simulator-$NEST_VERSION-build
+ls /home/travis/virtualenv
+ls /home/travis/virtualenv/python3.6.9
+ls /home/travis/virtualenv/python3.6.9/bin
 cmake -Dwith-python=3 \
-  -DPYTHON_EXECUTABLE=/home/travis/ \
+  -DPYTHON_EXECUTABLE=/home/travis/virtualenv/python3.6.9/bin/python \
   -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so \
   -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m/ \
   -DCMAKE_INSTALL_PREFIX:PATH=/home/travis/nest-$NEST_VERSION \
