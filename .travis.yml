@@ -17,6 +17,8 @@ install:
       echo "NEST cache found, skipping installation";
     fi
   - export PYTHONPATH=/home/travis/nest-$NEST_VERSION/lib/python3.6/site-packages:$PYTHONPATH
+  - export NEST_MODULE_PATH=/home/travis/nest-$NEST_VERSION/lib/nest:$NEST_MODULE_PATH
+  - export SLI_PATH=/home/travis/nest-$NEST_VERSION/share/sli:$SLI_PATH
   - python -m pip install .
 script:
   - python /home/travis/build/dbbs-lab/cereb-nest/tests/test_install.py
