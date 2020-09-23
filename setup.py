@@ -17,12 +17,6 @@ def check_cmake():
     except OSError:
         return False
 
-def check_env():
-    import nest
-
-    mod_path = NEST_MODULE_PATH=/home/travis/nest-2.18.0/lib/nest:$NEST_MODULE_PATH
-    export SLI_PATH=/home/travis/nest-2.18.0/share/nest/sli:$SLI_PATH
-
 class cmake_extension(Extension):
     def __init__(self, name):
         Extension.__init__(self, name, sources=[])
