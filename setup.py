@@ -32,9 +32,6 @@ class cmake_build(build_ext):
         nest_install_dir = os.path.sep.join(nest.__path__[0].split(os.path.sep)[:-4])
         # Installation dir of nest, required for the cmake command
         nest_config = os.path.join(nest_install_dir, "bin", "nest-config")
-        os.system("cat " + nest_config)
-        with open(nest_config, "r") as f:
-            raise Exception(f.read())
         # Name of the extension, will be used to determine folder name
         ext_name = self.extensions[0].name
         # The path where CMake will be configured and Arbor will be built.
