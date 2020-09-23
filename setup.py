@@ -36,10 +36,10 @@ class cmake_build(build_ext):
         if mod_dir not in mod or sli_dir not in sli:
             raise Exception(
                 "Please make sure the following env vars contain these directories:\n" +
-                f"* NEST_MODULE_PATH: '{mod_dir}'\n",
-                f"* SLI_PATH: '{sli_dir}'\n",
-                "You can do so by making sure the following 2 commands are executed on startup (eg. placed in ~/.bashrc):\n",
-                f"export NEST_MODULE_PATH={mod_dir}:$NEST_MODULE_PATH\n",
+                f"* NEST_MODULE_PATH: '{mod_dir}'\n" +
+                f"* SLI_PATH: '{sli_dir}'\n" +
+                "You can do so by making sure the following 2 commands are executed on startup (eg. placed in ~/.bashrc):\n" +
+                f"export NEST_MODULE_PATH={mod_dir}:$NEST_MODULE_PATH\n" +
                 f"export SLI_PATH={sli_dir}:$SLI_PATH"
             )
 
