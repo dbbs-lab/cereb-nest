@@ -17,19 +17,39 @@ def check_cmake():
     except OSError:
         return False
 
+def check_env():
+    import nest
+
+    mod_path = NEST_MODULE_PATH=/home/travis/nest-2.18.0/lib/nest:$NEST_MODULE_PATH
+    export SLI_PATH=/home/travis/nest-2.18.0/share/nest/sli:$SLI_PATH
+
 class cmake_extension(Extension):
     def __init__(self, name):
         Extension.__init__(self, name, sources=[])
 
 class cmake_build(build_ext):
     def run(self):
-        print("RUNNING CMAKE")
         if not check_cmake():
             raise RuntimeError('CMake is not available. CMake 3.12 is required.')
 
         import nest
 
         nest_install_dir = os.path.sep.join(nest.__path__[0].split(os.path.sep)[:-4])
+        mod = os.getenv("NEST_MODULE_PATH", "")
+        sli = os.getenv("SLI_PATH", "")
+        mod_dir = os.path.join(nest_install_dir, "lib", "nest")
+        sli_dir = os.path.join(nest_install_dir, "share", "sli")
+        if mod_dir not in mod or sli_dir not in sli:
+            raise Exception(
+                "Please make sure the following env vars contain these directories:\n" +
+                f"* NEST_MODULE_PATH: '{mod_dir}'\n",
+                f"* SLI_PATH: '{sli_dir}'\n",
+                "You can do so by making sure the following 2 commands are executed on startup (eg. placed in ~/.bashrc):\n",
+                f"export NEST_MODULE_PATH={mod_dir}:$NEST_MODULE_PATH\n",
+                f"export SLI_PATH={sli_dir}:$SLI_PATH"
+            )
+
+
         # Installation dir of nest, required for the cmake command
         nest_config = os.path.join(nest_install_dir, "bin", "nest-config")
         # Name of the extension, will be used to determine folder name
@@ -67,10 +87,6 @@ class cmake_build(build_ext):
         cmake_cmd = ['make', 'install']
         subprocess.check_call(cmake_cmd,
                               cwd=self.build_temp)
-
-        lib_dir = os.path.join(nest_install_dir, "lib", "nest")
-        if lib_dir not in os.getenv("LD_LIBRARY_PATH"):
-            raise Exception(f"'{lib_dir}' needs to be added to LD_LIBRARY_PATH for the installation of this module to succeed.")
 
         # Copy from build path to some other place from whence it will later be installed.
         # ... or something like that
