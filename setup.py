@@ -29,8 +29,12 @@ class cmake_build(build_ext):
 
         import nest
 
+        nest_install_dir = os.path.sep.join(nest.__path__[0].split(os.path.sep)[:-4])
         # Installation dir of nest, required for the cmake command
-        nest_install_dir = os.path.sep.join(nest.__path__[0].split(os.path.sep)[:-4] + ["bin", "nest-config"])
+        nest_config = os.path.join(nest_install_dir, "bin", "nest-config")
+        os.system("cat " + nest_config)
+        with open(nest_config, "r") as f:
+            raise Exception(f.read())
         # Name of the extension, will be used to determine folder name
         ext_name = self.extensions[0].name
         # The path where CMake will be configured and Arbor will be built.
@@ -45,7 +49,7 @@ class cmake_build(build_ext):
 
         cmake_args = [
             '-DCMAKE_BUILD_TYPE=Release', # we compile with debug symbols in release mode.
-            "-Dwith-nest=" + nest_install_dir
+            "-Dwith-nest=" + nest_config
         ]
         build_args = ['--config', 'Release']
 
@@ -66,6 +70,10 @@ class cmake_build(build_ext):
         cmake_cmd = ['make', 'install']
         subprocess.check_call(cmake_cmd,
                               cwd=self.build_temp)
+
+        lib_dir = os.path.join(nest_install_dir, "lib", "nest")
+        if lib_dir not in os.getenv("LD_LIBRARY_PATH"):
+            raise Exception(f"'{lib_dir}' needs to be added to LD_LIBRARY_PATH for the installation of this module to succeed.")
 
         # Copy from build path to some other place from whence it will later be installed.
         # ... or something like that
