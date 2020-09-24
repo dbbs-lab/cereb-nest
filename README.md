@@ -49,7 +49,7 @@ cd build
 ```
 4. Run the following CMake command (Tested with CMake 3.2.2)
 ```
-cmake -Dwith-nest=${NEST_INSTALL_DIR}/bin/nest-config ..
+cmake -Dwith-nest=${NEST_INSTALL_DIR}/bin/nest-config ../cereb_nest
 ```
 
 The resulting output should be something similar to:
