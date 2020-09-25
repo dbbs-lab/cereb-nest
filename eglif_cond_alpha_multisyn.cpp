@@ -50,8 +50,8 @@ std::vector <float> spikes_times_;
 /* ----------------------------------------------------------------
 * Recordables map
 * ---------------------------------------------------------------- */
-nest::RecordablesMap<eglif_cond_alpha_multisyn>
-    eglif_cond_alpha_multisyn::recordablesMap_;
+nest::RecordablesMap<nest::eglif_cond_alpha_multisyn>
+    nest::eglif_cond_alpha_multisyn::recordablesMap_;
 
 namespace nest {
 // Override the create() method with one call to RecordablesMap::insert_()
