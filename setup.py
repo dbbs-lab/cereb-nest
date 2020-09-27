@@ -30,17 +30,11 @@ class cmake_build(build_ext):
 
         nest_install_dir = os.path.sep.join(nest.__path__[0].split(os.path.sep)[:-4])
         mod = os.getenv("NEST_MODULE_PATH", "")
-        sli = os.getenv("SLI_PATH", "")
         mod_dir = os.path.join(nest_install_dir, "lib", "nest")
-        sli_dir = os.path.join(nest_install_dir, "share", "sli")
         if mod_dir not in mod or sli_dir not in sli:
             raise Exception(
-                "Please make sure the following env vars contain these directories:\n" +
-                f"* NEST_MODULE_PATH: '{mod_dir}'\n" +
-                f"* SLI_PATH: '{sli_dir}'\n" +
-                "You can do so by making sure the following 2 commands are executed on startup (eg. placed in ~/.bashrc):\n" +
-                f"export NEST_MODULE_PATH={mod_dir}:$NEST_MODULE_PATH\n" +
-                f"export SLI_PATH={sli_dir}:$SLI_PATH"
+                f"Please make sure 'NEST_MODULE_PATH' env var contains '{mod_dir}' for the installation to succeed.\n"
+                + f"Current value: '{mod}'"
             )
 
 
