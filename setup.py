@@ -31,7 +31,7 @@ class cmake_build(build_ext):
         nest_install_dir = os.path.sep.join(nest.__path__[0].split(os.path.sep)[:-4])
         mod = os.getenv("NEST_MODULE_PATH", "")
         mod_dir = os.path.join(nest_install_dir, "lib", "nest")
-        if mod_dir not in mod or sli_dir not in sli:
+        if mod_dir not in mod:
             raise Exception(
                 f"Please make sure 'NEST_MODULE_PATH' env var contains '{mod_dir}' for the installation to succeed.\n"
                 + f"Current value: '{mod}'"
