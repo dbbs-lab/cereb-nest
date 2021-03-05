@@ -521,7 +521,7 @@ void eglif_cond_alpha_multisyn::calibrate() {
 
   V_.receptors = 4;			// Number of receptor ports
 
-  V_.V_th = -50.0;
+  V_.V_th = P_.V_th;
 
   V_.I_gen = 0.0;
 
