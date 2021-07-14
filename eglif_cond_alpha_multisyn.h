@@ -466,13 +466,13 @@ public:
 
   inline double set_R2(const double v) {return V_.R2 = v; }
 
-  inline double get_old_Vm() const { return V_.old_Vm; }
+  inline double get_old_Iinput() const { return V_.old_Iinput; }
 
-  inline void set_old_Vm(const double v) { V_.old_Vm = v; }
+  inline void set_old_Iinput(const double v) { V_.old_Iinput = v; }
 
-  inline double get_new_Vm() const { return V_.new_Vm; }
+  inline double get_new_Iinput() const { return V_.new_Iinput; }
 
-  inline void set_old_new_Vm(const double v) { V_.new_Vm = v; }
+  inline void set_old_new_Iinput(const double v) { V_.new_Iinput = v; }
 
   inline double get_old_slope() const { return V_.old_slope; }
 
@@ -989,8 +989,8 @@ protected:
 
     // Added for R2 update
     double R2;
-    double old_Vm;
-    double new_Vm;
+    double old_Iinput;
+    double new_Iinput;
     double old_slope; //
     double new_slope;
 
@@ -1051,11 +1051,11 @@ protected:
     inline double get_R2() const { return R2; }
     inline void set_R2(const double R2) { this->R2 = R2; }
 
-    inline double get_old_Vm() const { return old_Vm; }
-    inline void set_old_Vm(const double old_Vm) { this->old_Vm = old_Vm; }
+    inline double get_old_Iinput() const { return old_Iinput; }
+    inline void set_old_Iinput(const double old_Iinput) { this->old_Iinput = old_Iinput; }
 
-    inline double get_new_Vm() const { return new_Vm; }
-    inline void set_new_Vm(const double new_Vm) { this->new_Vm = new_Vm; }
+    inline double get_new_Iinput() const { return new_Iinput; }
+    inline void set_new_Iinput(const double new_Iinput) { this->new_Iinput = new_Iinput; }
 
     inline double get_old_slope() const { return old_slope; }
     inline void set_old_slope(const double old_slope) { this->old_slope = old_slope; }
