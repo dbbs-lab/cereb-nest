@@ -782,7 +782,7 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
 
         double time_scale = 1 / (-P_.sc / (P_.C_m * P_.E_L));
 
-        if (S_.y_[State_::I_input]<P_.istim_min_spiking_exp){
+        if (S_.y_[State_::I_input]<P_.istim_min_spiking_exp || S_.y_[State_::I_input]<P_.istim_max_spiking_exp){
           double c_aux = 0.8*P_.Idep_ini_vr + (S_.y_[State_::I_input]/(P_.sc)) / P_.bet+(P_.delta1/P_.bet)*(1+P_.V_reset)-P_.a*exp(P_.b*S_.y_[State_::I_input]/1000);
 
           S_.y_[State_::I_adap] = curr_conv_fact*(c_aux + (P_.a * exp(P_.b*S_.y_[State_::I_input]) * ((nest::Time::get_resolution().get_ms()-V_.init_sign) * time_scale)) / (P_.alp + (nest::Time::get_resolution().get_ms()-V_.init_sign) * time_scale));
