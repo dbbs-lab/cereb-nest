@@ -597,7 +597,7 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
   double step_ = nest::Time::get_resolution().get_ms();
   double IntegrationStep_ = nest::Time::get_resolution().get_ms();
   double t = 0;
-  double curr_conv_fact = P_.kadap*(-P_.E_L)/P_.k2
+  double curr_conv_fact = P_.kadap*(-P_.E_L)/P_.k2;
 
   V_.old_Iinput = V_.new_Iinput;
   V_.new_Iinput = S_.y_[State_::I_input];
