@@ -7,6 +7,8 @@
 import os
 import time
 
+import pylab
+
 def remove_files():
     for f in os.listdir('.'):
         if '.gdf' in f or '.dat' in f:
@@ -35,17 +37,17 @@ n_simulation = 0
 # In[4]:
 
 
-nest.GetDefaults('eglif_cond_alpha_multisyn')
+print(nest.GetDefaults('eglif_cond_alpha_multisyn'))
 
 
 # In[4]:
 
 
-while(n_simulation < 10):
+while(n_simulation < 1):
     n_simulation += 1
     nest.ResetKernel()
     nest.SetKernelStatus({"overwrite_files": True,				# Parameters for writing on files
-                        "data_path": "/home/nrp/workspace/E-GLIF/single_neu_simulations/CA1PC_sim",
+                        "data_path": "/home/nrp/workspace/cereb-nest",
                         "data_prefix": "eglif_CA1PC_"+str(n_simulation)+'_'})
 
     random.seed()
@@ -80,7 +82,7 @@ eglif_cond_alpha_multisyn = {
           #          "I_e": param_all[5],
            #         "kadap": param_all[0],
             #        "k1": param_all[3],
-    
+
              #       "k2": param_all[1],
                #     "A1": param_all[4],
                 #    "A2":param_all[2],
@@ -186,7 +188,7 @@ nest.Connect(single_neuron_CA1PC, sd)
 # In[19]:
 
 
-nest.Simulate(5000.0)
+nest.Simulate(500.0)
 time.sleep(0.5)
 
 
@@ -205,5 +207,23 @@ nest.GetDefaults('eglif_cond_alpha_multisyn')
 # In[ ]:
 
 
+# Plotting
+events = nest.GetStatus(m)[0]["events"]
+t = events["times"]
+
+pylab.clf()
 
 
+pylab.subplot(411)
+pylab.plot(t,events["I_gen"])
+
+pylab.subplot(412)
+pylab.plot(t,events["V_m"])
+
+pylab.subplot(413)
+pylab.plot(t,events["I_adap"])
+
+pylab.subplot(414)
+pylab.plot(t,events["I_dep"])
+
+pylab.show()
