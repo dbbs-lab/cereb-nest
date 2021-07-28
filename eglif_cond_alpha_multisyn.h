@@ -869,7 +869,6 @@ protected:
       V_m,
       I_dep,
       I_adap,
-      I_input,
       G1,
       DG1,
       G2,
@@ -883,8 +882,6 @@ protected:
     //! state vector, must be C-array for GSL solver
 
     double y_[STATE_VEC_SIZE];//  - an array of all the state variables undergoing
-
-    double time;
 
     double I_syn; //
 
@@ -950,6 +947,7 @@ protected:
 
     double init_sign;
 
+    double time;
 
     // Added for R2 update
     double R2;
