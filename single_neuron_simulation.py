@@ -48,7 +48,8 @@ while(n_simulation < 1):
     nest.ResetKernel()
     nest.SetKernelStatus({"overwrite_files": True,				# Parameters for writing on files
                         "data_path": "/home/nrp/workspace/cereb-nest",
-                        "data_prefix": "eglif_CA1PC_"+str(n_simulation)+'_'})
+                        "data_prefix": "eglif_CA1PC_"+str(n_simulation)+'_',
+                        "resolution": 1.0})
 
     random.seed()
     seed = random.randint(10, 10000)
@@ -136,7 +137,7 @@ sd = nest.Create('spike_detector',
 
 
 m = nest.Create("multimeter",
-                    params = {"interval": 0.1,
+                    params = {"interval": 1.0,
                             "record_from": ["V_m", "V_th", "I_dep", "I_adap", "I_gen"],
                             "withgid": True,
                             "to_file": True,
