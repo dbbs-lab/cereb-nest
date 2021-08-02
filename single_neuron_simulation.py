@@ -28,6 +28,8 @@ import random
 # In[3]:
 
 
+tic = time.perf_counter()
+
 nest.Install("cerebmodule")
 nest.set_verbosity("M_WARNING")
 
@@ -204,6 +206,8 @@ print(n_simulation)
 
 nest.GetDefaults('eglif_cond_alpha_multisyn')
 
+toc = time.perf_counter()
+print(f"time: {toc - tic:0.4f} seconds")
 
 # In[ ]:
 
