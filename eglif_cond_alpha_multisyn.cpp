@@ -605,6 +605,7 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
   double IntegrationStep_ = nest::Time::get_resolution().get_ms();
   double t = 0;
   double curr_conv_fact = (P_.bet*P_.C_m*pow((1/(P_.delta1*P_.tau_m)),2))*(-P_.E_L) / (1/(P_.delta1*P_.tau_m));
+  double vm_conv_fact = -P_.E_L;
 
   //std::cout << " conv fact " << curr_conv_fact << std::endl;
 
@@ -793,7 +794,7 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
         double time_scale = 1 / (-P_.sc / (P_.C_m * P_.E_L));
 
         if (B_.currents_last_value_<P_.istim_min_spiking_exp || B_.currents_last_value_>P_.istim_max_spiking_exp){
-          double c_aux = 0.8*P_.Idep_ini_vr + (B_.currents_last_value_/(P_.sc)) / P_.bet+(P_.delta1/P_.bet)*(1+P_.V_reset)-P_.a*exp(P_.b*B_.currents_last_value_/1000);
+          double c_aux = 0.8*P_.Idep_ini_vr + (B_.currents_last_value_/(P_.sc)) / P_.bet+(P_.delta1/P_.bet)*(1+P_.V_reset/vm_conv_fact)-P_.a*exp(P_.b*B_.currents_last_value_/1000);
 
           S_.y_[State_::I_adap] = curr_conv_fact*(c_aux + (P_.a * exp(P_.b*B_.currents_last_value_/1000) * (V_.time -V_.init_sign)) / (P_.alp + (V_.time -V_.init_sign)));
           std::cout<<"if current range Iadap = "<<S_.y_[State_::I_adap] << " " << curr_conv_fact << " " << c_aux << " " << time_scale << std::endl;
