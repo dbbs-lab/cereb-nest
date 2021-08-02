@@ -475,7 +475,7 @@ eglif_cond_alpha_multisyn_dynamics(double, const double y[], double f[],
   // k2 = 1/(delta*tau_m)
   // k1 = beta*k2
   // kadap = beta*Cm*k2^2
-  f[State_::I_dep] = ((-node.get_bet()*node.get_k2())) * y[State_::I_dep];
+  f[State_::I_dep] = ((-node.get_bet()/(node.get_delta1()*node.get_tau_m()))) * y[State_::I_dep];
   f[State_::I_adap] = ((-1/(node.get_delta1()*node.get_tau_m()))) * y[State_::I_adap] + node.get_bet()*node.get_C_m()*pow(1/(node.get_delta1()*node.get_tau_m()),2)*(y[State_::V_m] - node.get_E_L());
 
 
