@@ -31,13 +31,14 @@ Vconvfact=-EL
 vth=-0.7745615818727873#-vth*EL
 vrm=-0.9521167423453459#vres/Vconvfact
 
+
 t0_val=0
 
 delta,Psi,alpha, beta, gamma, IaA0, IdA0, t0, V0 = sym.symbols('delta,Psi,alpha,beta,gamma,IaA0,IdA0,t0,V0')
 
 ts=np.inf
 
-
+C_m = 189.79
 tao_m=2975.410306906496
 sc=27.678206947038134
 bet=0.3279210955457432
@@ -55,6 +56,10 @@ istim_max_spikinig_exp=1000
 #c=-10.
 #alp=1.1144
 time_scale=1 / (-sc / (Cm * EL))
+
+
+curr_conv_fact = (bet*C_m*((1/(delta1*tao_m))**2))*(-EL) / (1/(delta1*tao_m));
+
 
 d_dt=1
 dt=d_dt/time_scale
@@ -99,6 +104,7 @@ Iada=[]
 Ide2=[]
 Iada2=[]
 ith=1.0969699757829885
+tspk = []
 
 while(t_final*time_scale<sim_lenght):
     #print(i)
@@ -106,13 +112,16 @@ while(t_final*time_scale<sim_lenght):
         # print(i)
         Idep_ini = 0
         Iadap_ini = (cor[i] / sc) / (bet - delta1)
+        print(Iadap_ini,"initial Iadap cor < ith")
         v_ini = ((cor[i] / sc) / (bet - delta1) - 1)
         out.append(v_ini)
+        print(v_ini,"initial Vm cor < ith")
 
     else:
         if cor[i] < cor[i-1]:
             # print(i)
             Idep_ini =Iadap_ini-(cor[i] / sc) / bet
+            print("Idep if cor[i] < cor[i-1]:",Idep_ini)
 
 
 
@@ -141,16 +150,23 @@ while(t_final*time_scale<sim_lenght):
         print('val_ist V')
         print(v_ini * Vconvfact)
         print('adap')
-        print(Iadap_ini)
+        print(Iadap_ini * curr_conv_fact)
+        print('dep')
+        print(Idep_ini * curr_conv_fact)
         print('t_fin')
         print(t_final)
         print('t_ini')
         print(init_sign)
         print('************')
+        tspk.append(t_final*time_scale)
+
         if cor[i]<istim_min_spikinig_exp or cor[i]>istim_max_spikinig_exp:
 
             c_aux=0.8*Idep_ini_vr + (cor[i]/(sc)) / bet+(delta1/bet)*(1+vrm)-a*np.exp(b*cor[i]/1000)
             Iadap_ini = monod((t_final - init_sign) * time_scale, a, b * cor[i] / 1000, c_aux, alp) * (((t_final * time_scale) > ts) * mul + 1)
+            print("c_aux", c_aux, " t_final ", t_final*time_scale, " init_sign ", init_sign*time_scale)
+            print('adap')
+            print(Iadap_ini," ", Iadap_ini * curr_conv_fact)  
         else:
             Iadap_ini=monod((t_final-init_sign)*time_scale,a,b*cor[i]/1000,c,alp)*(((t_final*time_scale)>ts)*mul+1)
         if cor[i]<1:
@@ -158,8 +174,8 @@ while(t_final*time_scale<sim_lenght):
             Iadap_ini =0
         else:
             Idep_ini=Idep_ini_vr
-        print('adap')
-        print(Iadap_ini)
+        print('dep')
+        print(Idep_ini * curr_conv_fact)
         #print(v_ini)
         #print(Iadap_ini)
         #print(Idep_ini)
@@ -167,6 +183,8 @@ while(t_final*time_scale<sim_lenght):
             out.append(v_ini)
             t_final = t_final + dt
             t_out.append(t_final)
+            Iada.append(Iadap_ini)
+            Ide.append(Idep_ini)
             i = i + 1
         #print('*************init*************')
         #print(t_final)
@@ -186,9 +204,22 @@ plt.title('voltage')
 plt.figure();
 plt.scatter(np.array(t_out)*time_scale,np.array(cor[0:len(t_out)]),s=2)
 plt.title('corrente')
+print("lengths ",len(t_out), len(out), len(Iada), len(Ide))
+plt.figure();
+plt.scatter(np.array(t_out)*time_scale,np.array(Iada)*curr_conv_fact,s=2)
+plt.title('Iadap')
+plt.figure();
+plt.scatter(np.array(t_out)*time_scale,np.array(Ide)*curr_conv_fact,s=2)
+plt.title('Idep')
 
 
 toc = time.perf_counter()
 print(f"time: {toc - tic:0.4f} seconds")
 plt.show()
 
+print("tspk", tspk)
+print(Ide)
+
+with open('variables_neuron_simulator.dat', 'w') as f:
+    for i in range(len(t_out)):
+        f.write(str(t_out[i]*time_scale)+" "+str(out[i]*Vconvfact)+" "+str(Iada[i]*curr_conv_fact)+" "+str(Ide[i]*curr_conv_fact)+" "+str(cor[i])+"  \n")
