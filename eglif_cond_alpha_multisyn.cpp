@@ -328,6 +328,8 @@ eglif_cond_alpha_multisyn::eglif_cond_alpha_multisyn()
 
   P_.Idep_ini_vr = 0.516088363498455;
 
+  P_.cost_idep_ini=0.3074538609199179
+
   P_.psi1 = 0.12242935394673728;
 
   P_.alp = 1.0219843023331783;
@@ -660,6 +662,7 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
    if (V_.bufferT[index]>0) {
        if (V_.bufferT[index-1]<P_.soglia_sign || V_.time < 1){
            V_.init_sign=V_.time;
+           S_.y_[State_::I_dep] = P_.cost_idep_ini*V_.bufferT[index]
          }
      }
 

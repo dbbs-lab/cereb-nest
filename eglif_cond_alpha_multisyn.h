@@ -359,6 +359,10 @@ public:
 
   inline void set_Idep_ini_vr(const double v) { P_.Idep_ini_vr = v; }
 
+  inline double get_cost_idep_ini() const { return P_.cost_idep_ini; }
+
+  inline void set_cost_idep_ini(const double v) { P_.cost_idep_ini = v; }
+
   inline double get_psi1() const { return P_.psi1; }
 
   inline void set_psi1(const double v) { P_.psi1 = v; }
@@ -640,6 +644,8 @@ protected:
 
     double Idep_ini_vr;
 
+    double cost_idep_ini;
+
     double psi1;
 
     double alp;
@@ -806,6 +812,9 @@ protected:
 
     inline double get_Idep_ini_vr() const { return Idep_ini_vr; }
     inline void set_Idep_ini_vr(const double Idep_ini_vr) { this->Idep_ini_vr = Idep_ini_vr; }
+
+    inline double get_cost_idep_ini() const { return cost_idep_ini; }
+    inline void set_cost_idep_ini(const double cost_idep_ini) { this->cost_idep_ini = cost_idep_ini; }
 
     inline double get_psi1() const { return psi1; }
     inline void set_psi1(const double psi1) { this->psi1 = psi1; }
@@ -1278,6 +1287,8 @@ eglif_cond_alpha_multisyn::get_status(DictionaryDatum &__d) const {
 
   def<double>(__d, "Idep_ini_vr", get_Idep_ini_vr());
 
+  def<double>(__d, "cost_idep_ini", get_cost_idep_ini());
+
   def<double>(__d, "psi1", get_psi1());
 
   def<double>(__d, "alp", get_alp());
@@ -1521,6 +1532,11 @@ eglif_cond_alpha_multisyn::set_status(const DictionaryDatum &__d) {
   double tmp_Idep_ini_vr;
   if (updateValue<double>(__d, "Idep_ini_vr", tmp_Idep_ini_vr)) {
     set_Idep_ini_vr(tmp_Idep_ini_vr);
+  }
+
+  double tmp_cost_idep_ini;
+  if (updateValue<double>(__d, "cost_idep_ini", tmp_cost_idep_ini)) {
+    set_cost_idep_ini(tmp_cost_idep_ini);
   }
 
   double tmp_psi1;
