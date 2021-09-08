@@ -721,7 +721,10 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
 
             S_.y_[State_::I_adap] = curr_conv_fact*((B_.currents_last_value_ / P_.sc) / (P_.bet - P_.delta1));
 
-            S_.y_[State_::V_m] = (((B_.currents_last_value_ / P_.sc) / (P_.bet - P_.delta1) - 1))*(-P_.E_L);
+            if (((B_.currents_last_value_ / P_.sc) / (P_.bet - P_.delta1))<S_.y_[State_::V_m]){
+
+              S_.y_[State_::V_m] = (((B_.currents_last_value_ / P_.sc) / (P_.bet - P_.delta1) - 1))*(-P_.E_L);
+            }
 
             //std::cout << "Input current lower than ith at time " << V_.time << " Iadap: " << S_.y_[State_::I_adap] << std::endl;
 
