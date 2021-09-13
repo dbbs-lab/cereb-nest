@@ -616,17 +616,6 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
   double curr_conv_fact = (P_.bet*P_.C_m*pow((1/(P_.delta1*P_.tau_m)),2))*(-P_.E_L) / (1/(P_.delta1*P_.tau_m));
   double vm_conv_fact = -P_.E_L;
 
-
-  // Recompute I_syn locally to obtain I_input (i.e. the sum of injected current from generators and synaptic currents)
-  double I_syn = 0.0;
-  I_syn += S_.y_[State_::G1] * ( get_E_rev1() - S_.y_[State_::V_m] );
-  I_syn += S_.y_[State_::G2] * ( get_E_rev2() - S_.y_[State_::V_m] );
-  I_syn += S_.y_[State_::G3] * ( get_E_rev3() - S_.y_[State_::V_m] );
-  I_syn += S_.y_[State_::G4] * ( get_E_rev4() - S_.y_[State_::V_m] );
-  V_.I_input = B_.currents_last_value_ + I_syn;
-
-  V_.old_Iinput = V_.new_Iinput;
-  V_.new_Iinput = V_.I_input;
   //std::cout << "Time " << V_.time << " " << nest::Time::get_resolution().get_ms() << " " << B_.currents_last_value_ << " " <<S_.y_[State_::V_m] << " " << S_.y_[State_::I_adap] << " " << S_.y_[State_::I_dep] << std::endl;
 
 
@@ -732,7 +721,20 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
 
         }
 
-      // std::cout << "Third check " << V_.new_Iinput << " "<< V_.old_Iinput << std::endl;
+      // Recompute I_syn locally to obtain I_input (i.e. the sum of injected current from generators and synaptic currents)
+      V_.old_Iinput = V_.I_input;
+
+      double I_syn = 0.0;
+      I_syn += S_.y_[State_::G1] * ( get_E_rev1() - S_.y_[State_::V_m] );
+      I_syn += S_.y_[State_::G2] * ( get_E_rev2() - S_.y_[State_::V_m] );
+      I_syn += S_.y_[State_::G3] * ( get_E_rev3() - S_.y_[State_::V_m] );
+      I_syn += S_.y_[State_::G4] * ( get_E_rev4() - S_.y_[State_::V_m] );
+      V_.I_input = B_.currents_last_value_ + I_syn;
+
+
+
+
+      std::cout << "Third check " << V_.new_Iinput << " "<< V_.old_Iinput << " " << V_.I_input << " " << B_.currents_last_value_ << std::endl;
       if ( V_.I_input < P_.ith){
 
             S_.y_[State_::I_dep] = 0;
@@ -744,17 +746,17 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
               S_.y_[State_::V_m] = (((V_.I_input / P_.sc) / (P_.bet - P_.delta1) - 1))*(-P_.E_L);
             }
 
-            //std::cout << "Input current lower than ith at time " << V_.time << " Iadap: " << S_.y_[State_::I_adap] << std::endl;
+            std::cout << "Input current lower than ith at time " << V_.time << " Iadap: " << S_.y_[State_::I_adap] << " I input: " << V_.I_input << std::endl;
 
         } else {
-          if (V_.I_input < V_.new_Iinput){
+          if (V_.I_input < V_.old_Iinput){
 
                 // To Check if S_.y_[State_::I_adap] is ok; it was Iadap_ini
-                double teta=((V_.bufferVm[1]*(-P_.E_L))/(V_.new_Iinput / P_.sc))*(1/nest::Time::get_resolution().get_ms() - P_.delta1)-((V_.bufferVm[0]*(-P_.E_L))/((V_.new_Iinput / P_.sc)*nest::Time::get_resolution().get_ms())) - P_.delta1/(V_.new_Iinput / P_.sc)-1;
-                S_.y_[State_::I_dep] = curr_conv_fact*(S_.y_[State_::I_adap]/curr_conv_fact + teta * (V_.I_input / P_.sc) / P_.bet);
+                double teta=((V_.bufferVm[1]*(-P_.E_L))/(V_.old_Iinput / P_.sc))*(1/nest::Time::get_resolution().get_ms() - P_.delta1)-((V_.bufferVm[0]*(-P_.E_L))/((V_.old_Iinput / P_.sc)*nest::Time::get_resolution().get_ms())) - P_.delta1/(V_.old_Iinput / P_.sc)-1;
+                S_.y_[State_::I_dep] = curr_conv_fact*(S_.y_[State_::I_adap]/curr_conv_fact + teta * (V_.I_input /curr_conv_fact / P_.sc) / P_.bet);
 
-                S_.y_[State_::I_dep] = curr_conv_fact*(S_.y_[State_::I_adap]/curr_conv_fact-(V_.I_input / P_.sc) / P_.bet);
-                // std::cout << "Input current decreasing at time " << V_.time << " Idep: " <<  S_.y_[State_::I_dep] << std::endl;
+                //S_.y_[State_::I_dep] = curr_conv_fact*(S_.y_[State_::I_adap]/curr_conv_fact-(V_.I_input / P_.sc) / P_.bet);
+                std::cout << "Input current decreasing at time " << V_.time << " Idep: " <<  S_.y_[State_::I_dep] << "I input old and new: "<< V_.old_Iinput << " " << V_.I_input << std::endl;
                 }
               }
 
@@ -829,6 +831,7 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
 
 
         if (V_.I_input<P_.istim_min_spiking_exp || V_.I_input>P_.istim_max_spiking_exp){
+          std::cout << "Current out of spiking ranges " << V_.I_input << std::endl;
           double c_aux = 0.8*P_.Idep_ini_vr + (V_.I_input/(P_.sc)) / P_.bet+(P_.delta1/P_.bet)*(1+P_.V_reset/vm_conv_fact)-P_.a*exp(P_.b*V_.I_input/1000);
 
           S_.y_[State_::I_adap] = curr_conv_fact*(c_aux + (P_.a * exp(P_.b*V_.I_input/1000) * (V_.time -V_.init_sign)) / (P_.alp + (V_.time -V_.init_sign)));
@@ -836,6 +839,7 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
           S_.y_[State_::I_adap] = curr_conv_fact*(P_.c + (P_.a * exp(P_.b*V_.I_input/1000) * (V_.time -V_.init_sign)) / (P_.alp + (V_.time -V_.init_sign)));
         }
         if ((V_.time *P_.tau_m )>P_.ts){
+          std::cout << "((V_.time *P_.tau_m )>P_.ts) " << std::endl;
           S_.y_[State_::I_adap]/=curr_conv_fact;
           S_.y_[State_::I_adap]*=P_.mul;
           S_.y_[State_::I_adap]+=1;
