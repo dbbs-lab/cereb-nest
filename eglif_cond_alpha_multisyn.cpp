@@ -615,6 +615,7 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
   double t = 0;
   double curr_conv_fact = (P_.bet*P_.C_m*pow((1/(P_.delta1*P_.tau_m)),2))*(-P_.E_L) / (1/(P_.delta1*P_.tau_m));
   double vm_conv_fact = -P_.E_L;
+  double time_scale = 1 / (-P_.sc / (P_.C_m * P_.E_L));
 
   //std::cout << "Time " << V_.time << " " << nest::Time::get_resolution().get_ms() << " " << B_.currents_last_value_ << " " <<S_.y_[State_::V_m] << " " << S_.y_[State_::I_adap] << " " << S_.y_[State_::I_dep] << std::endl;
 
@@ -748,11 +749,18 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
 
         } else {
           if (V_.I_input < V_.old_Iinput){
-
+                std::cout << "Input decreasing " << std::endl;
                 // To Check if S_.y_[State_::I_adap] is ok; it was Iadap_ini
-                double teta=((V_.bufferVm[1]*(-P_.E_L))/(V_.old_Iinput / P_.sc))*(1/nest::Time::get_resolution().get_ms() - P_.delta1)-((V_.bufferVm[0]*(-P_.E_L))/((V_.old_Iinput / P_.sc)*nest::Time::get_resolution().get_ms())) - P_.delta1/(V_.old_Iinput / P_.sc)-1;
-                S_.y_[State_::I_dep] = curr_conv_fact*(S_.y_[State_::I_adap]/curr_conv_fact + teta * (V_.I_input /curr_conv_fact / P_.sc) / P_.bet);
+                double teta = ((V_.bufferVm[1]/vm_conv_fact)/(V_.old_Iinput / P_.sc))
+                * (1/(nest::Time::get_resolution().get_ms()/time_scale) - P_.delta1)
+                - ((V_.bufferVm[0]/vm_conv_fact)/((V_.old_Iinput / P_.sc) * (nest::Time::get_resolution().get_ms()/time_scale)))
+                - (P_.delta1/(V_.old_Iinput / P_.sc))
+                -1;
+                std::cout << "teta " << teta << "  " << ((V_.bufferVm[1]/vm_conv_fact)/(V_.old_Iinput / P_.sc)) << "  " << (1/(nest::Time::get_resolution().get_ms()/time_scale) - P_.delta1) << "  " << (V_.bufferVm[0]/vm_conv_fact) << "  " << ((V_.old_Iinput / P_.sc)*(nest::Time::get_resolution().get_ms()/time_scale)) << "  " << P_.delta1/(V_.old_Iinput / P_.sc) << std::endl;
+                S_.y_[State_::I_dep] = curr_conv_fact*(S_.y_[State_::I_adap]/curr_conv_fact + teta * (V_.I_input / P_.sc) / P_.bet);
 
+                teta = (out[i-1] / (cor[i-1] / sc)) * (1/dt-delta1)-(out[i-2]/((cor[i-1] / sc)*dt))-delta1/(cor[i-1] / sc)-1
+              //  Idep_ini = Iadap_ini + teta * (cor[i] / sc) / bet
                 }
               }
 
