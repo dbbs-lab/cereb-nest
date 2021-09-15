@@ -756,11 +756,17 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
                 - ((V_.bufferVm[0]/vm_conv_fact)/((V_.old_Iinput / P_.sc) * (nest::Time::get_resolution().get_ms()/time_scale)))
                 - (P_.delta1/(V_.old_Iinput / P_.sc))
                 -1;
-                std::cout << "teta " << teta << "  " << ((V_.bufferVm[1]/vm_conv_fact)/(V_.old_Iinput / P_.sc)) << "  " << (1/(nest::Time::get_resolution().get_ms()/time_scale) - P_.delta1) << "  " << (V_.bufferVm[0]/vm_conv_fact) << "  " << ((V_.old_Iinput / P_.sc)*(nest::Time::get_resolution().get_ms()/time_scale)) << "  " << P_.delta1/(V_.old_Iinput / P_.sc) << std::endl;
+                
+                // std::cout << "teta " << teta << "  " <<
+                // ((V_.bufferVm[1]/vm_conv_fact)/(V_.old_Iinput / P_.sc)) << "  " <<
+                // (1/(nest::Time::get_resolution().get_ms()/time_scale) - P_.delta1) << "  " <<
+                // (V_.bufferVm[0]/vm_conv_fact) << "  " <<
+                // ((V_.old_Iinput / P_.sc)*(nest::Time::get_resolution().get_ms()/time_scale)) << "  " <<
+                // P_.delta1/(V_.old_Iinput / P_.sc) <<
+                // std::endl;
+
                 S_.y_[State_::I_dep] = curr_conv_fact*(S_.y_[State_::I_adap]/curr_conv_fact + teta * (V_.I_input / P_.sc) / P_.bet);
 
-                teta = (out[i-1] / (cor[i-1] / sc)) * (1/dt-delta1)-(out[i-2]/((cor[i-1] / sc)*dt))-delta1/(cor[i-1] / sc)-1
-              //  Idep_ini = Iadap_ini + teta * (cor[i] / sc) / bet
                 }
               }
 
