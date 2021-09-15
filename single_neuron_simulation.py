@@ -128,6 +128,8 @@ for i in range(0,num_dc):
 
 # In[35]:
 
+sg = nest.Create('spike_generator',
+                params = {"spike_times": [20.0]})
 
 sd = nest.Create('spike_detector',
                 params = {"to_file": True,
@@ -140,7 +142,7 @@ sd = nest.Create('spike_detector',
 
 m = nest.Create("multimeter",
                     params = {"interval": 1.0,
-                            "record_from": ["V_m", "V_th", "I_dep", "I_adap", "I_gen"],
+                            "record_from": ["V_m", "V_th", "I_dep", "I_adap", "I_gen", "G1"],
                             "withgid": True,
                             "to_file": True,
                             "label": "multimeter"})
@@ -186,6 +188,7 @@ for i in range(0,num_dc):
 
 nest.Connect(m, single_neuron_CA1PC)
 nest.Connect(single_neuron_CA1PC, sd)
+nest.Connect(sg, single_neuron_CA1PC, syn_spec={"weight":10.0, "receptor_type":1})
 
 
 # In[19]:
@@ -219,16 +222,19 @@ t = events["times"]
 pylab.clf()
 
 
-pylab.subplot(411)
+pylab.subplot(511)
 pylab.plot(t,events["I_gen"])
 
-pylab.subplot(412)
+pylab.subplot(512)
 pylab.plot(t,events["V_m"])
 
-pylab.subplot(413)
+pylab.subplot(513)
 pylab.plot(t,events["I_adap"])
 
-pylab.subplot(414)
+pylab.subplot(514)
 pylab.plot(t,events["I_dep"])
+
+pylab.subplot(515)
+pylab.plot(t,events["G1"])
 
 pylab.show()
