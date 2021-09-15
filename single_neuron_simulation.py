@@ -39,7 +39,7 @@ n_simulation = 0
 # In[4]:
 
 
-print(nest.GetDefaults('eglif_cond_alpha_multisyn'))
+print(nest.GetDefaults('eglif_hippo_CA1'))
 
 
 # In[4]:
@@ -72,7 +72,7 @@ while(n_simulation < 1):
 # In[31]:
 
 
-eglif_cond_alpha_multisyn = {
+eglif_hippo_CA1 = {
  #                   "t_ref": param_CA1PC['t_ref'],
   #                  "C_m": param_CA1PC['C_m'],
    #                 "V_th": param_CA1PC['V_th'],
@@ -100,7 +100,7 @@ eglif_cond_alpha_multisyn = {
 # In[32]:
 
 
-single_neuron_CA1PC = nest.Create("eglif_cond_alpha_multisyn")
+single_neuron_CA1PC = nest.Create("eglif_hippo_CA1")
 
 
 # In[33]:
@@ -171,7 +171,7 @@ for i in durate[:num_dc]:
 # In[40]:
 
 
-nest.SetStatus(single_neuron_CA1PC, eglif_cond_alpha_multisyn)
+nest.SetStatus(single_neuron_CA1PC, eglif_hippo_CA1)
 
 
 # In[18]:
@@ -204,7 +204,7 @@ print(n_simulation)
 # In[20]:
 
 
-nest.GetDefaults('eglif_cond_alpha_multisyn')
+nest.GetDefaults('eglif_hippo_CA1')
 
 toc = time.perf_counter()
 print(f"time: {toc - tic:0.4f} seconds")

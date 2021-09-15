@@ -27,7 +27,7 @@
 
 // include headers with your own stuff
 #include "volume_transmitter_alberto.h"
-#include "eglif_cond_alpha_multisyn.h"
+#include "eglif_hippo_CA1.h"
 #include "stdp_connection_sinexp.h"
 #include "stdp_connection_cosexp.h"
 #include "stdp_connection_alpha.h"
@@ -118,8 +118,8 @@ mynest::CerebModule::init( SLIInterpreter* i )
   nest::kernel().model_manager.register_node_model< mynest::volume_transmitter_alberto >(
     "volume_transmitter_alberto" );
 
-  nest::kernel().model_manager.register_node_model< eglif_cond_alpha_multisyn >(
-    "eglif_cond_alpha_multisyn" );
+  nest::kernel().model_manager.register_node_model< eglif_hippo_CA1 >(
+    "eglif_hippo_CA1" );
 
 
   /*

@@ -40,7 +40,7 @@ set( MODULE_NAME ${SHORT_NAME}module )
 set( MODULE_SOURCES
     cerebmodule.h cerebmodule.cpp
     volume_transmitter_alberto.h volume_transmitter_alberto.cpp
-    eglif_cond_alpha_multisyn.h eglif_cond_alpha_multisyn.cpp
+    eglif_hippo_CA1.h eglif_hippo_CA1.cpp
     stdp_connection_cosexp.h stdp_connection_cosexp.cpp
     stdp_connection_sinexp.h stdp_connection_sinexp.cpp
     stdp_connection_alpha.h stdp_connection_alpha.cpp
