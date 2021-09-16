@@ -9,12 +9,6 @@ import time
 
 import pylab
 
-def remove_files():
-    for f in os.listdir('.'):
-        if '.gdf' in f or '.dat' in f:
-            os.remove(f)
-
-remove_files()
 
 
 # In[2]:
