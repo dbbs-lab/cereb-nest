@@ -22,12 +22,13 @@ git clone https://github.com/dbbs-lab/cereb-nest/
 ```
 3. Move to cereb-nest directory and create a new folder where you will build the extension module
 ```
-mkdir $HOME/cereb-nest-build
-cd $HOME/cereb-nest-build
+cd cereb-nest
+mkdir build
+cd build
 ```
 4. Run the following CMake command (Tested with CMake 3.2.2)
 ```
-cmake -Dwith-nest=${NEST_INSTALL_DIR}/bin/nest-config $HOME/cereb-nest
+cmake -Dwith-nest=${NEST_INSTALL_DIR}/bin/nest-config ..
 ```
 
 The resulting output should be something similar to:
