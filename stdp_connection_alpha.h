@@ -183,15 +183,15 @@ public:
     ConnTestDummyNode dummy_target;
     ConnectionBase::check_connection_( dummy_target, s, t, receptor_type );
     t.register_stdp_connection( t_lastspike_ - get_delay(), get_delay() );
+    vt_num_is_long_ = 1;
   }
 
   void set_weight( double w ){
     weight_ = w;
+    vt_num_is_long_ = 0;
   }
 
-  void set_vt_num( double n ){
-   vt_num_ = n;
-  }
+  void set_vt_num(const DictionaryDatum& d);
 
 private:
   // update dopamine trace from last to current dopamine spike and increment index
@@ -212,9 +212,21 @@ private:
   // time of last update, which is either time of last presyn. spike or time-driven update
   double t_last_update_;
 
-  double vt_num_;
-    
+  long vt_num_;
+
   double t_lastspike_;
+  
+  // This bool is useful to contemporary create the connection and set the value of vt_num_,
+  // without generating an error caused by a type error (probably caused by nest).
+  // In fact, just in this case, the "vt_num" element in the dictionary assumes the type double
+  // and we should convert to long before assign to vt_num_. To properly identify this 
+  // situation, we use vt_num_is_long_, whose default value is 1. If the user calls the function
+  // nest.Connect(..., {'vt_num': i}), nest will call the following costum functions, in order:
+  // set_weight(), set_status(), check_connection(). In set_weight we update vt_num_is_long_=0,
+  // so that we are ready to convert vt_num to long in set_status. In check_connection we reset
+  // vt_num_is_long_=1, ready for eventual consequent calls. This structure is also robust to 
+  // other strategies to set connection parameters
+  bool vt_num_is_long_;
 };
 
 //
@@ -227,8 +239,9 @@ template < typename targetidentifierT > STDPAlphaConnection< targetidentifierT >
   , weight_( 1.0 )
   , dopa_spikes_idx_( 0 )
   , t_last_update_( 0.0 )
-  , vt_num_ ( 0.0 )
+  , vt_num_ ( 0 )
   , t_lastspike_( 0.0 )
+  , vt_num_is_long_ ( 1 )
 {
 }
 
@@ -240,6 +253,7 @@ template < typename targetidentifierT > STDPAlphaConnection< targetidentifierT >
   , t_last_update_( rhs.t_last_update_ )
   , vt_num_ ( rhs.vt_num_ )
   , t_lastspike_( rhs.t_lastspike_ )
+  , vt_num_is_long_ ( rhs.vt_num_is_long_ )
 {
 }
 
@@ -248,7 +262,7 @@ template < typename targetidentifierT > void STDPAlphaConnection< targetidentifi
   // base class properties, different for individual synapse
   ConnectionBase::get_status( d );
   def< double >( d, nest::names::weight, weight_ );
-  def< double >( d, "vt_num", vt_num_ );
+  def< long >( d, "vt_num", vt_num_ );
   if ( vt_ != 0 )
   {
     def< long >( d, "modulator", vt_->get_gid() );
@@ -282,7 +296,7 @@ STDPAlphaConnection< targetidentifierT >::set_status( const DictionaryDatum& d,
   // base class properties
   ConnectionBase::set_status( d, cm );
   updateValue< double >( d, nest::names::weight, weight_ );
-  updateValue< double >( d, "vt_num", vt_num_ );
+  set_vt_num( d );
   long vtgid;
   if ( updateValue< long >( d, nest::names::vt, vtgid ) )
   {
@@ -349,7 +363,7 @@ STDPAlphaConnection< targetidentifierT >::process_dopa_spikes_(
   // process dopa spikes in (t0, t1]
   // propagate weight from t0 to t1
   if ( ( dopa_spikes.size() > dopa_spikes_idx_ ) &&
-       ( dopa_spikes[ dopa_spikes_idx_ ].spike_time_ <= t1 && dopa_spikes[ dopa_spikes_idx_+1 ].multiplicity_ == int (vt_num_ ) ) )
+       ( dopa_spikes[ dopa_spikes_idx_ ].spike_time_ <= t1 && dopa_spikes[ dopa_spikes_idx_+1 ].multiplicity_ == vt_num_ ) )
   {
     // A IO SPIKE IS DETECTED AT TIME T0, LTD happens with a different amplitude, it depends on the distance between IO SPIKE and PF spikes
     update_dopamine_( dopa_spikes, cp );
@@ -427,20 +441,24 @@ STDPAlphaConnection< targetidentifierT >::trigger_update_weight(
 
 
 template < typename targetidentifierT >
-inline nest::Node*
-STDPAlphaConnection< targetidentifierT >::get_node()
+void
+STDPAlphaConnection< targetidentifierT >::set_vt_num (const DictionaryDatum& d)
 {
-  if ( vt_ == 0 )
-  {
-    throw nest::BadProperty( "No neuron has been assigned as the modulator of the synapse." );
-  }
-  else
-  {
-    return vt_;
-  }
+  if (vt_num_is_long_) 
+    {
+      updateValue< long >( d, mynames::vt_num, vt_num_ );
+    }
+  else  
+    {
+    if (d->known(mynames::vt_num))
+      {
+        // only in this case is double in the dictionary
+        double tmp = getValue< double >( d, mynames::vt_num );
+        vt_num_ = (long) tmp;
+      }
+    }
 }
 
 } // of namespace mynest
 
 #endif // of #ifndef STDP_CONNECTION_ALPHA_H
-
