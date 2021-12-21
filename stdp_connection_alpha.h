@@ -216,16 +216,20 @@ private:
 
   double t_lastspike_;
   
-  // This bool is useful to contemporary create the connection and set the value of vt_num_,
-  // without generating an error caused by a type error (probably caused by nest).
-  // In fact, just in this case, the "vt_num" element in the dictionary assumes the type double
-  // and we should convert to long before assign to vt_num_. To properly identify this 
-  // situation, we use vt_num_is_long_, whose default value is 1. If the user calls the function
-  // nest.Connect(..., {'vt_num': i}), nest will call the following costum functions, in order:
-  // set_weight(), set_status(), check_connection(). In set_weight we update vt_num_is_long_=0,
-  // so that we are ready to convert vt_num to long in set_status. In check_connection we reset
-  // vt_num_is_long_=1, ready for eventual consequent calls. This structure is also robust to 
-  // other strategies to set connection parameters
+  // This bool is necessary when the user wants to contemporary create the connection and 
+  // set the value of vt_num_ (passing it in the dictionary), without generating a type error 
+  // (probably caused by a nest old version bug).
+  // In fact, just in this type of connection definition, the "vt_num" element in the dictionary 
+  // is converted to double and we should re-convert to long before assign to vt_num_. 
+  // To properly identify this situation, we use vt_num_is_long_, whose default value is 1. 
+  // If the user uses the function nest.Connect(..., {'vt_num': i}), nest calls the 
+  // following custom functions, in order: 
+  // 1. set_weight(), 
+  // 2. set_status(), 
+  // 3. check_connection(). 
+  // In set_weight we update vt_num_is_long_=0, so that we are ready to convert vt_num to long
+  // in set_status. In check_connection we reset vt_num_is_long_=1, ready for eventual consequent 
+  // calls. This structure is also robust to other strategies of setting connection parameters.
   bool vt_num_is_long_;
 };
 
