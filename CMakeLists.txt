@@ -1,4 +1,5 @@
-# Cereb/CMakeLists.txt
+
+# cereb/CMakeLists.txt
 #
 # This file is part of NEST.
 #
@@ -17,11 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with NEST.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required( VERSION 2.8.12 )
-
 # This CMakeLists.txt is configured to build your external module for NEST. For
 # illustrative reasons this module is called 'my' (change SHORT_NAME to your
-# preferred module name). NEST requires you to extend the 'SLIModule' and provide a module header
+# preferred module name). NEST requires you to extend the 'SLIModule' (see
+# mymodule.h and mymodule.cpp as an example) and provide a module header
 # (see MODULE_HEADER). The subsequent instructions
 #
 # The configuration requires a compiled and installed NEST; if `nest-config` is
@@ -30,23 +30,18 @@ cmake_minimum_required( VERSION 2.8.12 )
 # For more informations on how to extend and use your module see:
 #           https://nest.github.io/nest-simulator/extension_modules
 
-# 1) Name your module here, i.e. add later with -Dexternal-modules=my:
-set( SHORT_NAME cereb )
+# 1) Name your module here, i.e. add later with -Dexternal-modules=${moduleName}:
+set( SHORT_NAME cerebmodule )
 
 #    the complete module name is here:
-set( MODULE_NAME ${SHORT_NAME}module )
+set( MODULE_NAME ${SHORT_NAME} )
 
 # 2) Add all your sources here
 set( MODULE_SOURCES
     cerebmodule.h cerebmodule.cpp
-    volume_transmitter_alberto.h volume_transmitter_alberto.cpp
-    eglif_cond_alpha_multisyn.h eglif_cond_alpha_multisyn.cpp
-    stdp_connection_cosexp.h stdp_connection_cosexp.cpp
-    stdp_connection_sinexp.h stdp_connection_sinexp.cpp
-    stdp_connection_alpha.h stdp_connection_alpha.cpp
-    iSTDP.h
-    Sgritta2017.h
-    mynames.h mynames.cpp
+    
+      eglif_cond_alpha_multisyn.cpp eglif_cond_alpha_multisyn.h
+    
     )
 
 # 3) We require a header name like this:
@@ -57,9 +52,6 @@ set( MODULE_HEADER ${MODULE_NAME}.h )
 set( MODULE_VERSION_MAJOR 1 )
 set( MODULE_VERSION_MINOR 0 )
 set( MODULE_VERSION "${MODULE_VERSION_MAJOR}.${MODULE_VERSION_MINOR}" )
-
-# 5) Leave the rest as is. All files in `sli` will be installed to
-#    `share/nest/sli/`, so that NEST will find the during initialization.
 
 # Leave the call to "project(...)" for after the compiler is determined.
 
@@ -104,7 +96,7 @@ project( ${MODULE_NAME} CXX )
 execute_process(
     COMMAND ${NEST_CONFIG} --prefix
     RESULT_VARIABLE RES_VAR
-    OUTPUT_VARIABLE NEST_INSTALL_PREFIX
+    OUTPUT_VARIABLE NEST_PREFIX
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
@@ -161,40 +153,30 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-# Get the data install dir.
-execute_process(
-    COMMAND ${NEST_CONFIG} --datadir
-    RESULT_VARIABLE RES_VAR
-    OUTPUT_VARIABLE NEST_INSTALL_DATADIR
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-# Get the documentation install dir.
-execute_process(
-    COMMAND ${NEST_CONFIG} --docdir
-    RESULT_VARIABLE RES_VAR
-    OUTPUT_VARIABLE NEST_INSTALL_DOCDIR
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-# Get the library install dir.
-execute_process(
-    COMMAND ${NEST_CONFIG} --libdir
-    RESULT_VARIABLE RES_VAR
-    OUTPUT_VARIABLE NEST_LIBDIR
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
 # on OS X
 set( CMAKE_MACOSX_RPATH ON )
 
-# Use the NEST_INSTALL_* variables as CMAKE_INSTALL_*, if not set explicitly.
-if ( "${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr/local" )
-  set( CMAKE_INSTALL_PREFIX "${NEST_INSTALL_PREFIX}" CACHE STRING "Install path prefix, prepended onto install directories." FORCE )
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  # Use the `NEST_PREFIX` as `CMAKE_INSTALL_PREFIX`.
+	set( CMAKE_INSTALL_PREFIX ${NEST_PREFIX} CACHE STRING "Install path prefix, prepended onto install directories." FORCE )
+  # Retrieve libs folder in nest
+	execute_process(
+    	COMMAND ${NEST_CONFIG} --libdir
+    	RESULT_VARIABLE RES_VAR
+    	OUTPUT_VARIABLE NEST_LIBDIR
+    	OUTPUT_STRIP_TRAILING_WHITESPACE)
+  # Append lib/nest to the install_dir
   set( CMAKE_INSTALL_LIBDIR "${NEST_LIBDIR}/nest" CACHE STRING "object code libraries (lib/nest or lib64/nest or lib/<multiarch-tuple>/nest on Debian)" FORCE )
-  set( CMAKE_INSTALL_DOCDIR "${NEST_INSTALL_DOCDIR}" CACHE STRING "documentation root (DATAROOTDIR/doc/nest)" FORCE )
-  set( CMAKE_INSTALL_DATADIR "${NEST_INSTALL_DATADIR}" CACHE STRING "read-only architecture-independent data (DATAROOTDIR/nest)" FORCE )
-endif ()
+else()
+  # Check If CMAKE_INSTALL_PREFIX is not empty string
+	if("${CMAKE_INSTALL_PREFIX}" STREQUAL "")
+  		message(FATAL_ERROR "CMAKE_INSTALL_PREFIX cannot be an empty string")
+	endif()
+  # Set lib folder to the given install_dir
+	set( CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX} CACHE STRING "object code libraries (lib/nest or lib64/nest or lib/<multiarch-tuple>/nest on Debian)" FORCE )
+endif()
+
 
 include( GNUInstallDirs )
 
@@ -266,12 +248,6 @@ set_target_properties( ${MODULE_NAME}_lib
     LINK_FLAGS "${NEST_LIBS}"
     OUTPUT_NAME ${MODULE_NAME} )
 
-# Install library, header and sli init files.
-install( TARGETS ${MODULE_NAME}_lib DESTINATION ${CMAKE_INSTALL_LIBDIR} )
-install( FILES ${MODULE_HEADER} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${MODULE_NAME} )
-install( DIRECTORY sli DESTINATION ${CMAKE_INSTALL_DATADIR} )
-
-
 message( "" )
 message( "-------------------------------------------------------" )
 message( "${MODULE_NAME} Configuration Summary" )
@@ -292,18 +268,7 @@ message( "  make install" )
 message( "" )
 message( "The library file lib${MODULE_NAME}.so will be installed to" )
 message( "  ${CMAKE_INSTALL_FULL_LIBDIR}" )
-message( "Help files will be installed to" )
-message( "  ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DOCDIR}" )
-message( "" )
 message( "The module can be loaded into NEST using" )
-message( "  (${MODULE_NAME}) Install        (in SLI)" )
-message( "  nest.Install('${MODULE_NAME}')  (in PyNEST)" )
+message( "  (${MODULE_NAME}) Install       (in SLI)" )
+message( "  nest.Install(${MODULE_NAME})   (in PyNEST)" )
 message( "" )
-
-if( NOT "${CMAKE_INSTALL_PREFIX}" EQUAL "${NEST_INSTALL_PREFIX}" )
-  message( "The module will be installed into a non-default location!" )
-  message( "Make sure to set the environment variables:" )
-  message( "  export NEST_MODULE_PATH=${CMAKE_INSTALL_FULL_LIBDIR}:$NEST_MODULE_PATH" )
-  message( "  export SLI_PATH=${CMAKE_INSTALL_FULL_DATADIR}/sli:$SLI_PATH" )
-  message( "" )
-endif ()
