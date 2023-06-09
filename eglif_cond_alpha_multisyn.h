@@ -861,6 +861,7 @@ protected:
 
 private:
   void calibrate_variables(bool exclude_timestep=false);
+  void pre_run_hook() override;
 
 private:
   /**
