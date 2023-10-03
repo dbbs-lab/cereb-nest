@@ -135,23 +135,18 @@ mynest::CerebModule::init( SLIInterpreter* i )
      Kunkel et al, Front Neurofinfom 8:78 (2014), Sec 3.3.2, for details.
   */
   nest::kernel()
-    .model_manager.register_connection_model< STDPAlphaConnection< nest::
-        TargetIdentifierPtrRport > >( "stdp_synapse_alpha" );
+    .model_manager.register_connection_model< STDPAlphaConnection >( "stdp_synapse_alpha" );
+        
+  nest::kernel()
+    .model_manager.register_connection_model< STDPSinExpConnection >( "stdp_synapse_sinexp" );
 
   nest::kernel()
-    .model_manager.register_connection_model< STDPSinExpConnection< nest::
-        TargetIdentifierPtrRport > >( "stdp_synapse_sinexp" );
+    .model_manager.register_connection_model< STDPCosExpConnection >( "stdp_synapse_cosexp" );
 
   nest::kernel()
-    .model_manager.register_connection_model< STDPCosExpConnection< nest::
-        TargetIdentifierPtrRport > >( "stdp_synapse_cosexp" );
+    .model_manager.register_connection_model< iSTDP >( "istdp_synapse" );
 
   nest::kernel()
-    .model_manager.register_connection_model< iSTDP< nest::
-        TargetIdentifierPtrRport > >( "istdp_synapse" );
-
-  nest::kernel()
-    .model_manager.register_connection_model< Sgritta2017< nest::
-        TargetIdentifierPtrRport > >( "sgritta_synapse" );
+    .model_manager.register_connection_model< Sgritta2017 >( "sgritta_synapse" );
 
 } // CerebModule::init()

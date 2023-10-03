@@ -100,6 +100,22 @@ set( CMAKE_CXX_COMPILER "${NEST_COMPILER}" )
 
 project( ${MODULE_NAME} CXX )
 
+# Get the Python executable (for help generation).
+execute_process(
+    COMMAND ${NEST_CONFIG} --python-executable
+    RESULT_VARIABLE RES_VAR
+    OUTPUT_VARIABLE PYTHON_EXECUTABLE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+# Get the Python executable (for help generation).
+execute_process(
+    COMMAND ${NEST_CONFIG} --python-version
+    RESULT_VARIABLE RES_VAR
+    OUTPUT_VARIABLE PYTHON_VERSION_STRING
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
 # Get the install prefix.
 execute_process(
     COMMAND ${NEST_CONFIG} --prefix
@@ -203,7 +219,7 @@ set( CPACK_GENERATOR TGZ )
 set( CPACK_SOURCE_GENERATOR TGZ )
 
 set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "NEST Module ${MODULE_NAME}" )
-set( CPACK_PACKAGE_VENDOR "NEST Initiative (http://www.nest-initiative.org/)" )
+set( CPACK_PACKAGE_VENDOR "NEST Initiative (https://www.nest-initiative.org/)" )
 
 set( CPACK_PACKAGE_VERSION_MAJOR ${MODULE_VERSION_MAJOR} )
 set( CPACK_PACKAGE_VERSION_MINOR ${MODULE_VERSION_MINOR} )

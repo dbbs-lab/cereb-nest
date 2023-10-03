@@ -45,7 +45,7 @@
 
 #include "eglif_cond_alpha_multisyn.h"
 
-std::vector <float> spikes_times_;
+// std::vector <float> spikes_times_;
 
 /* ----------------------------------------------------------------
 * Recordables map
@@ -698,8 +698,8 @@ void eglif_cond_alpha_multisyn::update(nest::Time const &origin,
 	if ( ((double) rand() / (RAND_MAX))			//V_.rng_->drand()
           < -numerics::expm1( -lambda * nest::Time::get_resolution().get_ms() ) )
         {									/////////// Spike generation!!!! ///////////
-	     //std::cout<<"spike!"<<std::endl;
-	     spikes_times_.push_back(S_.time);
+	     // std::cout<<"spike!"<<std::endl;
+	     // spikes_times_.push_back(S_.time);
 	      V_.r = V_.RefractoryCounts;
 
 	      // Update of the buffer of spikes times
