@@ -287,42 +287,6 @@ install( TARGETS ${MODULE_NAME}_lib DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 install( FILES ${MODULE_HEADER} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${MODULE_NAME} )
 install( DIRECTORY sli DESTINATION ${CMAKE_INSTALL_DATADIR} )
 
-# Install help --- based on doc/CMakeLists.txt
-# Install only if Py >= 2.7.8 and NEST was installed with help
-if ( ( NOT CMAKE_CROSSCOMPILING ) 
-     AND PYTHON_EXECUTABLE 
-     AND ( ${PYTHON_VERSION_STRING} VERSION_GREATER "2.7.7" )
-     AND ( IS_DIRECTORY ${NEST_INSTALL_PREFIX}/${NEST_INSTALL_DOCDIR}/help )
-   )
-
-    # Extract help from all source files in the source code, put
-    # them in doc/help and generate a local help index in the
-    # build directory containing links to the help files.
-    install( CODE
-      "execute_process(
-         COMMAND ${PYTHON_EXECUTABLE} -B generate_help.py \"${PROJECT_SOURCE_DIR}\" \"${PROJECT_BINARY_DIR}\"
-         WORKING_DIRECTORY \"${NEST_INSTALL_PREFIX}/${NEST_INSTALL_DATADIR}/help_generator\"
-         )"
-      )
-  
-    # Copy the local doc/help directory to the global installation
-    # directory for documentation.
-    install( DIRECTORY "${PROJECT_BINARY_DIR}/doc/help"
-      DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DOCDIR}"
-      OPTIONAL
-      )
-  
-    # Update the global help index to include all help files in
-    # the global installation directory for documentation.
-    install( CODE
-      "execute_process(
-         COMMAND ${PYTHON_EXECUTABLE} -B generate_helpindex.py \"${NEST_INSTALL_PREFIX}/${NEST_INSTALL_DOCDIR}\"
-         WORKING_DIRECTORY \"${NEST_INSTALL_PREFIX}/${NEST_INSTALL_DATADIR}/help_generator\"
-         )"
-      )
-
-endif ()
-
 
 message( "" )
 message( "-------------------------------------------------------" )
