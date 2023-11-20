@@ -226,7 +226,7 @@ public:
   /**
    * Used to validate that we can send nest::SpikeEvent to desired target:port.
   **/
-  nest::port send_test_event(nest::Node& target, nest::rport receptor_type, nest::synindex, bool);
+  size_t send_test_event(nest::Node& target, size_t receptor_type, nest::synindex, bool);
 
   // -------------------------------------------------------------------------
   //   Functions handling incoming events.
@@ -238,9 +238,9 @@ public:
   void handle(nest::SpikeEvent &);        //! accept spikes
   void handle(nest::CurrentEvent &);      //! accept input current
   void handle(nest::DataLoggingRequest &);//! allow recording with multimeter
-  nest::port handles_test_event(nest::SpikeEvent&, nest::port);
-  nest::port handles_test_event(nest::CurrentEvent&, nest::port);
-  nest::port handles_test_event(nest::DataLoggingRequest&, nest::port);
+  size_t handles_test_event(nest::SpikeEvent&, size_t);
+  size_t handles_test_event(nest::CurrentEvent&, size_t);
+  size_t handles_test_event(nest::DataLoggingRequest&, size_t);
 
   // -------------------------------------------------------------------------
   //   Functions for getting/setting parameters and state values.
@@ -861,7 +861,7 @@ protected:
 
 private:
   void calibrate_variables(bool exclude_timestep=false);
-  void pre_run_hook() override;
+  void pre_run_hook();
 
 private:
   /**
@@ -1203,7 +1203,7 @@ private:
 
 }; /* neuron eglif_cond_alpha_multisyn */
 
-inline nest::port eglif_cond_alpha_multisyn::send_test_event(nest::Node& target, nest::rport receptor_type, nest::synindex, bool)
+inline size_t eglif_cond_alpha_multisyn::send_test_event(nest::Node& target, size_t receptor_type, nest::synindex, bool)
 {
   // You should usually not change the code in this function.
   // It confirms that the target of connection @c c accepts @c nest::SpikeEvent on
@@ -1213,7 +1213,7 @@ inline nest::port eglif_cond_alpha_multisyn::send_test_event(nest::Node& target,
   return target.handles_test_event(e, receptor_type);
 }
 
-inline nest::port eglif_cond_alpha_multisyn::handles_test_event(nest::SpikeEvent&, nest::port receptor_type)
+inline size_t eglif_cond_alpha_multisyn::handles_test_event(nest::SpikeEvent&, size_t receptor_type)
 {
     assert( B_.spike_inputs_.size() == 4 );
 
@@ -1228,7 +1228,7 @@ inline nest::port eglif_cond_alpha_multisyn::handles_test_event(nest::SpikeEvent
     }
 }
 
-inline nest::port eglif_cond_alpha_multisyn::handles_test_event(nest::CurrentEvent&, nest::port receptor_type)
+inline size_t eglif_cond_alpha_multisyn::handles_test_event(nest::CurrentEvent&, size_t receptor_type)
 {
   // You should usually not change the code in this function.
   // It confirms to the connection management system that we are able
@@ -1241,7 +1241,7 @@ inline nest::port eglif_cond_alpha_multisyn::handles_test_event(nest::CurrentEve
   return 0;
 }
 
-inline nest::port eglif_cond_alpha_multisyn::handles_test_event(nest::DataLoggingRequest& dlr, nest::port receptor_type)
+inline size_t eglif_cond_alpha_multisyn::handles_test_event(nest::DataLoggingRequest& dlr, size_t receptor_type)
 {
   // You should usually not change the code in this function.
   // It confirms to the connection management system that we are able

@@ -45,7 +45,10 @@
 
 
 #include "eglif_cond_alpha_multisyn.h"
-
+#include "volume_transmitter_alberto.h"
+#include "stdp_connection_alpha.h"
+#include "stdp_connection_cosexp.h"
+#include "stdp_connection_sinexp.h"
 
 // -- Interface to dynamic module loader ---------------------------------------
 
@@ -101,6 +104,10 @@ cerebmodule::init( SLIInterpreter* i )
 {
   
     nest::kernel().model_manager.register_node_model<eglif_cond_alpha_multisyn>("eglif_cond_alpha_multisyn");
+    nest::kernel().model_manager.register_node_model<nest::volume_transmitter_alberto>("volume_transmitter_alberto");
+    nest::kernel().model_manager.register_connection_model<nest::STDPAlphaConnection>("stdp_synapse_alpha");
+    nest::kernel().model_manager.register_connection_model<nest::STDPCosExpConnection>("stdp_connection_cosexp");
+    nest::kernel().model_manager.register_connection_model<nest::STDPSinExpConnection>("stdp_connection_sinexp");
   
 
   

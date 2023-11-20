@@ -38,10 +38,22 @@ set( MODULE_NAME ${SHORT_NAME} )
 
 # 2) Add all your sources here
 set( MODULE_SOURCES
-    cerebmodule.h cerebmodule.cpp
     
-      eglif_cond_alpha_multisyn.cpp eglif_cond_alpha_multisyn.h
     
+    eglif_cond_alpha_multisyn.cpp eglif_cond_alpha_multisyn.h
+    
+    mynames.h mynames.cpp 
+    
+    volume_transmitter_alberto.h volume_transmitter_alberto.cpp
+    
+    stdp_connection_alpha.h stdp_connection_alpha.cpp
+    
+    stdp_connection_cosexp.h stdp_connection_cosexp.cpp
+    
+    stdp_connection_sinexp.h stdp_connection_sinexp.cpp
+    
+    cerebmodule.h cerebmodule.cpp 
+      
     )
 
 # 3) We require a header name like this:
