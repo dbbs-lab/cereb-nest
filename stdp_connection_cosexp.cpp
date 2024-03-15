@@ -40,7 +40,7 @@
 // Includes from sli:
 #include "dictdatum.h"
 
-namespace mynest
+namespace nest
 {
 //
 // Implementation of class STDPCosExpCommonProperties.
@@ -62,7 +62,7 @@ STDPCosExpCommonProperties::get_status( DictionaryDatum& d ) const
   nest::CommonSynapseProperties::get_status( d );
   if ( vtC_ != 0 )
   {
-    def< long >( d, nest::names::vt, vtC_->get_gid() );
+    def< long >( d, nest::names::vt, vtC_->get_node_id() );
   }
 
   else
@@ -84,7 +84,7 @@ STDPCosExpCommonProperties::set_status( const DictionaryDatum& d,
   long vtgid;
   if ( updateValue< long >( d, nest::names::vt, vtgid ) )
   {
-    vtC_ = dynamic_cast< volume_transmitter_alberto* >( nest::kernel().node_manager.get_node(
+    vtC_ = dynamic_cast< volume_transmitter_alberto* >( nest::kernel().node_manager.get_node_or_proxy(
       vtgid, nest::kernel().vp_manager.get_thread_id() ) );
     if ( vtC_ == 0 )
     {

@@ -43,7 +43,7 @@
  * Default constructor defining default parameters
  * ---------------------------------------------------------------- */
 
-mynest::volume_transmitter_alberto::Parameters_::Parameters_()
+nest::volume_transmitter_alberto::Parameters_::Parameters_()
   : deliver_interval_( 1 ) // in steps of mindelay
   , vt_num_ ( 0 )
 {
@@ -54,13 +54,13 @@ mynest::volume_transmitter_alberto::Parameters_::Parameters_()
  * ---------------------------------------------------------------- */
 
 void
-mynest::volume_transmitter_alberto::Parameters_::get( DictionaryDatum& d ) const
+nest::volume_transmitter_alberto::Parameters_::get( DictionaryDatum& d ) const
 {
   def< long >( d, nest::names::deliver_interval, deliver_interval_ );
   def< long >( d, "vt_num", vt_num_ );
 }
 
-void mynest::volume_transmitter_alberto::Parameters_::set( const DictionaryDatum& d )
+void nest::volume_transmitter_alberto::Parameters_::set( const DictionaryDatum& d )
 {
   updateValue< long >( d, nest::names::deliver_interval, deliver_interval_ );
   updateValue< long >( d, "vt_num", vt_num_ );
@@ -70,35 +70,35 @@ void mynest::volume_transmitter_alberto::Parameters_::set( const DictionaryDatum
  * Default and copy constructor for volume transmitter
  * ---------------------------------------------------------------- */
 
-mynest::volume_transmitter_alberto::volume_transmitter_alberto()
-  : Archiving_Node()
+nest::volume_transmitter_alberto::volume_transmitter_alberto()
+  : ArchivingNode()
   , P_()
 {
 }
 
-mynest::volume_transmitter_alberto::volume_transmitter_alberto( const volume_transmitter_alberto& n )
-  : Archiving_Node( n )
+nest::volume_transmitter_alberto::volume_transmitter_alberto( const volume_transmitter_alberto& n )
+  : ArchivingNode( n )
   , P_( n.P_ )
 {
 }
 
 void
-mynest::volume_transmitter_alberto::init_state_( const Node& )
+nest::volume_transmitter_alberto::init_state_( const Node& )
 {
 }
 
 void
-mynest::volume_transmitter_alberto::init_buffers_()
+nest::volume_transmitter_alberto::init_buffers_()
 {
   B_.neuromodulatory_spikes_.clear();
   B_.spikecounter_.clear();
   B_.spikecounter_.push_back(
   nest::spikecounter( 0.0, 0.0 ) ); // insert pseudo last dopa spike at t = 0.0
-  Archiving_Node::clear_history();
+  ArchivingNode::clear_history();
 }
 
 void
-mynest::volume_transmitter_alberto::calibrate()
+nest::volume_transmitter_alberto::calibrate()
 {
   // +1 as pseudo dopa spike at t_trig is inserted after trigger_update_weight
   B_.spikecounter_.reserve(
@@ -106,7 +106,7 @@ mynest::volume_transmitter_alberto::calibrate()
 }
 
 void
-mynest::volume_transmitter_alberto::update( const nest::Time&, const long from, const long to )
+nest::volume_transmitter_alberto::update( const nest::Time&, const long from, const long to )
 {
   // spikes that arrive in this time slice are stored in spikecounter_
   double t_spike;
@@ -125,7 +125,7 @@ mynest::volume_transmitter_alberto::update( const nest::Time&, const long from, 
       if ( not( B_.spikecounter_.empty() ) )
       {
         //std::cout << P_.vt_num_ << " << P_.vt_num_ " << get_gid() << " << get_gid() " << std::endl;
-        nest::kernel().connection_manager.trigger_update_weight(get_gid()-P_.vt_num_, B_.spikecounter_, t_trig );
+        nest::kernel().connection_manager.trigger_update_weight(get_node_id()-P_.vt_num_, B_.spikecounter_, t_trig );
       }
       // clear spikecounter
       B_.spikecounter_.clear();
@@ -138,7 +138,7 @@ mynest::volume_transmitter_alberto::update( const nest::Time&, const long from, 
 }
 
 void
-mynest::volume_transmitter_alberto::handle( nest::SpikeEvent& e )
+nest::volume_transmitter_alberto::handle( nest::SpikeEvent& e )
 {
   B_.neuromodulatory_spikes_.add_value(
     e.get_rel_delivery_steps( nest::kernel().simulation_manager.get_slice_origin() ),

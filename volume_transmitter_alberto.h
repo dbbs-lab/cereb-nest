@@ -34,7 +34,7 @@
 #include "namedatum.h"
 
 
-namespace mynest
+namespace nest
 {
 
 /** @BeginDocumentation
@@ -92,9 +92,11 @@ Receives: SpikeEvent
 SeeAlso: stdp_dopamine_synapse
 
 */
-class ConnectorBase;
 
-class volume_transmitter_alberto : public nest::Archiving_Node
+
+//class ConnectorBase{}
+
+class volume_transmitter_alberto : public nest::ArchivingNode
 {
 
 public:
@@ -187,7 +189,7 @@ inline void
 volume_transmitter_alberto::get_status( DictionaryDatum& d ) const
 {
   P_.get( d );
-  nest::Archiving_Node::get_status( d );
+  nest::ArchivingNode::get_status( d );
 
   ( *d )[ nest::names::element_type ] = LiteralDatum( nest::names::other );
 }
@@ -202,7 +204,7 @@ volume_transmitter_alberto::set_status( const DictionaryDatum& d )
   // write them back to (P_, S_) before we are also sure that
   // the properties to be set in the parent class are internally
   // consistent.
-  nest::Archiving_Node::set_status( d );
+  nest::ArchivingNode::set_status( d );
 
   // if we get here, temporaries contain consistent set of properties
   P_ = ptmp;

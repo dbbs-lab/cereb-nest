@@ -60,7 +60,7 @@
 #include <math.h>
 #include "mynames.h"
 
-namespace mynest
+namespace nest
 {
 
 /**
@@ -93,7 +93,7 @@ STDPSinExpCommonProperties::get_vt_gid() const
 {
   if ( vtC_ != 0 )
   {
-    return vtC_->get_gid();
+    return vtC_->get_node_id();
   }
   else
   {
@@ -112,7 +112,7 @@ class STDPSinExpConnection : public nest::Connection< targetidentifierT >
 
 public:
 
-  nest::Node* get_node();
+  nest::Node* get_node_or_proxy();
 
   long get_vt_gid() const;
 
@@ -251,7 +251,7 @@ template < typename targetidentifierT > void STDPSinExpConnection< targetidentif
   def< double >( d, "vt_num", vt_num_ );
   if ( vt_ != 0 )
   {
-    def< long >( d, "modulator", vt_->get_gid() );
+    def< long >( d, "modulator", vt_->get_node_id() );
   }
   else
   {
@@ -266,7 +266,7 @@ STDPSinExpConnection< targetidentifierT >::get_vt_gid( ) const
 {
   if ( vt_ != 0 )
   {
-    return vt_->get_gid();
+    return vt_->get_node_id();
   }
   else
   {
@@ -286,7 +286,7 @@ STDPSinExpConnection< targetidentifierT >::set_status( const DictionaryDatum& d,
   long vtgid;
   if ( updateValue< long >( d, nest::names::vt, vtgid ) )
   {
-    vt_ = dynamic_cast< volume_transmitter_alberto* >( nest::kernel().node_manager.get_node( vtgid ) );
+    vt_ = dynamic_cast< volume_transmitter_alberto* >( nest::kernel().node_manager.get_node_or_proxy( vtgid ) );
     if ( vt_ == 0 )
     {
       throw nest::BadProperty( "vt needs to be a Volume Transmitter" );
@@ -429,7 +429,7 @@ STDPSinExpConnection< targetidentifierT >::trigger_update_weight(
 
 template < typename targetidentifierT >
 inline nest::Node*
-STDPSinExpConnection< targetidentifierT >::get_node()
+STDPSinExpConnection< targetidentifierT >::get_node_or_proxy()
 {
   if ( vt_ == 0 )
   {
